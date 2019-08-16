@@ -6,7 +6,7 @@ Description: Convert the base amount to MYR for Billplz for WooCommerce
 Version: 1.0.0
 Author: wzul
 Author URI: https://github.com/wzul/billplz-woo-convert-currency
-License: GPLv2 or later
+License: MIT License
  */
 
 class BillplzWooConvertCurrency
