@@ -12,7 +12,7 @@ License: GPLv2 or later
 class BillplzWooConvertCurrency
 {
 
-    const CURRENCY_CONVERSION_CHARGES = 0;
+    const CURRENCY_CONVERSION_CHARGES = 1;
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ class BillplzWooConvertCurrency
     public function convert_total_value($order_data)
     {
         $this->get_current_conversion();
-        $order_data['total'] = $order_data['total'] * $this->get_current_conversion() + self::CURRENCY_CONVERSION_CHARGES;
+        $order_data['total'] = $order_data['total'] * $this->get_current_conversion() * self::CURRENCY_CONVERSION_CHARGES;
         return $order_data;
     }
 
