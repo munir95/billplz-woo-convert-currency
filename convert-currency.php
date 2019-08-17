@@ -15,7 +15,7 @@ class BillplzWooConvertCurrency
      * 1: OpenExchangeRates.org
      * 2: BNM API
      */
-    const CURRENCY_PROVIDER = 1;
+    const CURRENCY_PROVIDER = 2;
 
     const APP_ID = 'e65018798d4a4585a8e2c41359cc7f3c';
     const DEFAULT_CONVERSION_RATE = 4;
