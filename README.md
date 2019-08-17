@@ -14,7 +14,7 @@ Changing Base Currency on WooCommerce will require 12 hour to refresh due to tra
 
 ## Plugin behavior
 
-This plugin will do 3 things:
+This plugin will do 4 things:
 
 1. Add base currency to Billplz for WooCommerce accepted currency.
 2. Get latest conversion rate based on base currency.
