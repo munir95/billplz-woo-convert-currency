@@ -3,7 +3,7 @@
 /*
 Plugin Name: BFW Total Converter
 Description: Convert the base amount to MYR for Billplz for WooCommerce
-Version: 1.0.1
+Version: 1.1.0
 Author: wzul
 Author URI: https://github.com/wzul/billplz-woo-convert-currency
 License: MIT License
@@ -11,6 +11,11 @@ License: MIT License
 
 class BillplzWooConvertCurrency
 {
+    /**
+     * 1: OpenExchangeRates.org
+     * 2: BNM API
+     */
+    const CURRENCY_PROVIDER = 1;
 
     const APP_ID = 'e65018798d4a4585a8e2c41359cc7f3c';
     const DEFAULT_CONVERSION_RATE = 4;
@@ -35,27 +40,26 @@ class BillplzWooConvertCurrency
         return $currency;
     }
 
+    private function get_currency_provider()
+    {
+        switch (self::CURRENCY_CONVERSION_CHARGES) {
+            case 1:
+                include 'include/CurrencyOpenExchangeRate.php';
+                return new BillplzOpenExchangeRate(self::APP_ID);
+            case 2:
+                include 'include/CurrencyBNMAPI.php';
+                return new BillplzBNMAPI();
+            default:
+                include 'include/CurrencyBNMAPI.php';
+                return new BillplzBNMAPI();
+        }
+    }
+
     public function get_current_conversion($default_conversion_rate)
     {
-        if (false === ($rates = get_transient('woo_amount_converter_for_billplz'))) {
-            $app_id = self::APP_ID;
-            $base = get_woocommerce_currency();
-            $rates = wp_remote_retrieve_body(wp_safe_remote_get("http://openexchangerates.org/api/latest.json?base=$base&symbols=MYR&app_id=$app_id"));
-            $check_rates = json_decode($rates);
 
-            // Check for error
-            if (is_wp_error($rates) || !empty($check_rates->error) || empty($rates)) {
-
-                /** Don't have to pass to admin_notices because it will never be called on Admin
-                 * if (401 == $check_rates->status) {
-                 * add_action('admin_notices', array($this, 'admin_notice_wrong_key'));
-                 *}
-                 */
-
-            } else {
-                set_transient('woo_amount_converter_for_billplz', $rates, HOUR_IN_SECONDS * 12);
-            }
-        }
+        $currency_provider = $this->get_currency_provider();
+        $rates = $currency_provider->getRates();
 
         $rates = json_decode($rates);
 
@@ -64,15 +68,6 @@ class BillplzWooConvertCurrency
         }
         return $default_conversion_rate;
     }
-    /** Don't have to pass to admin_notices because it will never be called on Admin
-     *public function admin_notice_wrong_key()
-     *{
-     *   ?>
-     *       <div class="error">
-     *           <p>WooCommerce amount converter for Billplz: Incorrect key!</p>
-     *       </div>
-     *   <?php
-    }*/
 
 }
 
